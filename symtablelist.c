@@ -3,7 +3,7 @@
 #include <string.h>
 #include "symtable.h"
 
-/* Represents a single binding in the symbol table */
+/* binding in symbol table */
 struct SymTableNode {
     char *pcKey;                   /* key string owned by SymTable */
     void *pvValue;                 /* value for key */
@@ -143,15 +143,36 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     for (psCurrentNode = oSymTable->psFirst; 
         psCurrentNode != NULL; 
         psCurrentNode = psCurrentNode->psNext) {
+            /* remove node from list */
             if (strcmp(psCurrentNode->pcKey, pcKey) == 0) {
-                
+                pvValue = psCurrentNode->pvValue; 
+                if (psPreviousNode == NULL) {
+                    oSymTable->psFirst = psCurrentNode->psNext;
+            } else {
+                psPreviousNode->psNext = psCurrentNode->psNext;
             }
+            free(psCurrentNode->pcKey); 
+            free(psCurrentNode); 
+            oSymTable->numBindings--; 
+            return pvValue;
+
+            }
+            psPreviousNode = psCurrentNode; 
         }
+        return NULL; 
 }
 
-
 void SymTable_map(SymTable_T oSymTable,
-    void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
-    const void *pvExtra) {
+                    void (*pfApply)(const char *pcKey, void *pvValue, 
+                    void *pvExtra), const void *pvExtra) {
+    struct SymTableNode *psCurrentNode; 
+    assert(oSymTable != NULL);
+    assert(pfApply != NULL);
+    for (psCurrentNode = oSymTable->psFirst; 
+        psCurrentNode != NULL; 
+        psCurrentNode = psCurrentNode->psNext) {
+            (*pfApply)(psCurrentNode->pcKey, psCurrentNode->pvValue,
+            (void *)pvExtra); 
+        }
 
     }
