@@ -1,6 +1,6 @@
 # Compiler and flags
-CC = gcc
-CFLAGS = -Wall -g
+CC = gcc217
+CFLAGS = 
 
 # Object files for symtablelist and symtablehash
 OBJS_LIST = symtablelist.o testsymtable.o
@@ -29,6 +29,6 @@ symtablehash.o: symtablehash.c symtable.h
 testsymtable.o: testsymtable.c symtable.h
 	$(CC) $(CFLAGS) -c testsymtable.c
 
-# Clean up object files and executables
+# delete all object files and executable binary files 
 clean:
 	rm -f *.o testsymtablelist testsymtablehash
