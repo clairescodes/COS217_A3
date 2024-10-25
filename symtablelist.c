@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "symtable.h"
+#include <stddef.h>
 
 /* binding in symbol table */
 struct SymTableNode {
