@@ -1,3 +1,6 @@
+#include <assert.h>
+#include <stdlib.h>
+#include <string.h>
 #include "symtable.h"
 
 /* binding in symbol table */
