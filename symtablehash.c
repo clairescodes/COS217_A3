@@ -39,11 +39,11 @@ SymTable_T SymTable_new(void) {
     if (oSymTable == NULL)
         return NULL;
     
-    oSymTable->buckets = malloc(INITIAL_BUCKET_COUNT * sizeof(struct SymTableNode *)); 
+    oSymTable->buckets = malloc(sizeof(struct SymTableNode *) * INITIAL_BUCKET_COUNT); 
     if (oSymTable->buckets == NULL) {
         free(oSymTable); 
         return NULL;
-    } 
+    }
     
     for (i = 0; i < INITIAL_BUCKET_COUNT; i++)
         oSymTable->buckets[i] = NULL; 
