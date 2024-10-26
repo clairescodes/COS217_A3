@@ -162,11 +162,73 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
 }
 
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
-    
+    struct SymTableNode *psCurrentNode;
+    size_t hashIndex; 
+
+    assert(oSymTable != NULL);
+    assert(pcKey != NULL);
+
+    hashIndex = SymTable_hash(pcKey, oSymTable->numBuckets);
+
+    /* find key by traversing bucket */
+    for (psCurrentNode = oSymTable->buckets[hashIndex];
+         psCurrentNode != NULL;
+         psCurrentNode = psCurrentNode->psNext) {
+        if (strcmp(psCurrentNode->pcKey, pcKey) == 0)
+            return psCurrentNode->pvValue;
+    }
+    return NULL; 
 }
 
-void *SymTable_remove(SymTable_T oSymTable, const char *pcKey);
+void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
+    struct SymTableNode *psCurrentNode;
+    struct SymTableNode *psPreviousNode = NULL;
+    size_t hashIndex; 
+    void *pvValue; 
+
+    assert (oSymTable != NULL); 
+    assert (pcKey != NULL);
+    hashIndex = SymTable_hash(pcKey, oSymTable->numBuckets); 
+
+    psCurrentNode = oSymTable->buckets[hashIndex];
+    while (psCurrentNode != NULL) {
+        if (strcmp(psCurrentNode->pcKey, pcKey) == 0) {
+            pvValue = psCurrentNode->pvValue;
+            
+            if (psPreviousNode == NULL) { /* case of a head node */
+                oSymTable->buckets[hashIndex] = psCurrentNode->psNext;
+            } else {
+                psPreviousNode->psNext = psCurrentNode->psNext;
+            }
+
+            free(psCurrentNode->pcKey); 
+            free(psCurrentNode); 
+
+            oSymTable->numBindings--; 
+            return pvValue; 
+        }
+        psPreviousNode = psCurrentNode;
+        psCurrentNode = psCurrentNode->psNext; 
+    }
+    return NULL; 
+}
 
 void SymTable_map(SymTable_T oSymTable,
     void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
-    const void *pvExtra);
+    const void *pvExtra) {
+    struct SymTableNode *psCurrentNode;
+    size_t i;
+
+    assert(oSymTable != NULL);
+    assert(pfApply != NULL);
+
+    for (i = 0; i < oSymTable->numBuckets; i++) {
+        psCurrentNode = oSymTable->buckets[i];
+        while (psCurrentNode != NULL) {
+            (*pfApply)(psCurrentNode->pcKey, psCurrentNode->pvValue, (void *)pvExtra);
+            psCurrentNode = psCurrentNode->psNext;
+        }
+
+    }
+
+}

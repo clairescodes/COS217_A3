@@ -1,6 +1,6 @@
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
+#ifndef SYMTABLE_INCLUDED
+#define SYMTABLE_INCLUDED
+
 #include <stddef.h>
 
 typedef struct SymTable *SymTable_T;
@@ -26,3 +26,5 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey);
 void SymTable_map(SymTable_T oSymTable,
     void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
     const void *pvExtra);
+
+#endif
