@@ -3,6 +3,13 @@
 #include <string.h>
 #include "symtable.h"
 #define INITIAL_BUCKET_COUNT 509
+#define RESIZE_FACTOR 0.5
+/* stores bucket sizes that are available */
+static const size_t availBucketSize[] = {509, 1021, 2039, 4093, 
+    8191, 16381, 32749, 65521};
+/* number of elements */
+static size_t numBucketSizes = sizeof(availBucketSize) 
+    / sizeof(availBucketSize[0]);
 
 /* key value pair node */
 struct SymTableNode {
@@ -31,6 +38,45 @@ static size_t SymTable_hash(const char *pcKey, size_t numBuckets) {
     return uHash % numBuckets;
 }
 
+static int SymTable_resize(SymTable_T oSymTable) {
+    size_t newBucketSize; 
+    size_t oldBucketSize = oSymTable->numBuckets; 
+    size_t i; 
+
+    size_t currentIndex = 0;
+    while (currentIndex < numBucketSizes 
+            && availBucketSize[currentIndex] <= oldBucketSize) {
+        currentIndex++;
+    }
+    /* reached maximum bucket size */
+    if (currentIndex >= numBucketSizes) return 1; 
+
+    newBucketSize = availBucketSize[currentIndex];
+    struct SymTableNode **newBuckets 
+        = calloc(newBucketSize, sizeof(struct SymTableNode *));
+    if (!newBuckets) return 0;
+
+    for (i = 0; i < oldBucketSize; i++) {
+        struct SymTableNode *node = oSymTable->buckets[i];
+        while (node) {
+            struct SymTableNode *nextNode = node->psNext;
+            size_t newIndex = SymTable_hash(node->pcKey, 
+                                            newBucketSize);
+            node->psNext = newBuckets[newIndex];
+            newBuckets[newIndex] = node;
+            node = nextNode;
+        }
+    }
+
+    free(oSymTable->buckets);
+    oSymTable->buckets = newBuckets;
+    oSymTable->numBuckets = newBucketSize;
+
+    return 1;
+
+
+}
+
 SymTable_T SymTable_new(void) {
     SymTable_T oSymTable;
     size_t i; 
@@ -39,7 +85,8 @@ SymTable_T SymTable_new(void) {
     if (oSymTable == NULL)
         return NULL;
     
-    oSymTable->buckets = malloc(sizeof(struct SymTableNode *) * INITIAL_BUCKET_COUNT); 
+    oSymTable->buckets = malloc(sizeof(struct SymTableNode *) 
+                                    * INITIAL_BUCKET_COUNT); 
     if (oSymTable->buckets == NULL) {
         free(oSymTable); 
         return NULL;
@@ -88,6 +135,14 @@ int SymTable_put(SymTable_T oSymTable,
         
         assert(oSymTable != NULL); 
         assert(pcKey != NULL); 
+
+        /* check if need resizing */
+        if ((double)oSymTable->numBindings / oSymTable->numBuckets 
+                                                    > RESIZE_FACTOR) {
+        if (!SymTable_resize(oSymTable)) {
+            return 0; /* Resizing failed due to memory allocation issue */
+            }
+        }
         
         hashIndex = SymTable_hash(pcKey, oSymTable->numBuckets); 
 
