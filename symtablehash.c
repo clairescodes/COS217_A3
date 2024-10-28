@@ -140,7 +140,8 @@ int SymTable_put(SymTable_T oSymTable,
         if ((double)oSymTable->numBindings / oSymTable->numBuckets 
                                                     > RESIZE_FACTOR) {
         if (!SymTable_resize(oSymTable)) {
-            return 0; /* Resizing failed due to memory allocation issue */
+            /* case when resizing fails */
+            return 0; 
             }
         }
         
