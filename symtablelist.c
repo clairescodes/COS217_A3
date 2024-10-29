@@ -38,9 +38,10 @@ SymTable_T SymTable_new(void) {
     SymTable_T oSymTable; 
 
     oSymTable = malloc(sizeof(struct SymTable));
-    if (oSymTable == NULL)
-        return NULL;
+    /* continues only if malloc is successful */
+    if (oSymTable == NULL) return NULL;
 
+    /* initialize all members of the structure */
     oSymTable->psFirst = NULL;
     oSymTable->uNumBindings = 0;
     return oSymTable;
@@ -53,9 +54,10 @@ void SymTable_free(SymTable_T oSymTable) {
 
     assert(oSymTable != NULL);
 
+    /* traverse list to free memory for each node */
     for (psCurrentNode = oSymTable->psFirst;
-         psCurrentNode != NULL;
-         psCurrentNode = psNextNode) {
+    psCurrentNode != NULL;
+    psCurrentNode = psNextNode) {
         psNextNode = psCurrentNode->psNext;
         free(psCurrentNode->pcKey);
         free(psCurrentNode);
@@ -70,10 +72,12 @@ size_t SymTable_getLength(SymTable_T oSymTable) {
     return oSymTable->uNumBindings;
 }
 
-/* adds new binding of pcKey, pvValue to symbol table (oSymTable) 
-   if the key pcKey doesn't exist in oSymTable. 
-   returns 1 if binding was added, returns 0 if memory allocation 
-   fails or key already exists in oSymTable */
+/* 
+ * adds new binding of pcKey, pvValue to symbol table (oSymTable) 
+ * if the key pcKey doesn't exist in oSymTable. 
+ * returns 1 if binding was added, returns 0 if memory allocation 
+ * fails or key already exists in oSymTable 
+ */
 int SymTable_put(SymTable_T oSymTable, 
     const char *pcKey, const void *pvValue) {
     struct SymTableNode *psNewNode;
@@ -83,18 +87,19 @@ int SymTable_put(SymTable_T oSymTable,
     assert(pcKey != NULL);
 
     /* check if there exists a duplicate key */
-    for (psCurrentNode = oSymTable->psFirst; psCurrentNode != NULL;
-         psCurrentNode = psCurrentNode->psNext) {
+    for (psCurrentNode = oSymTable->psFirst; 
+    psCurrentNode != NULL;
+    psCurrentNode = psCurrentNode->psNext) {
         if (strcmp(psCurrentNode->pcKey, pcKey) == 0)
             return 0; 
     }
 
-    /* create new node */
+    /* new node */
     psNewNode = malloc(sizeof(struct SymTableNode));
     if (psNewNode == NULL)
         return 0;
 
-    /* defensive copy of the key */
+    /* key's defensive copy */
     psNewNode->pcKey = malloc(strlen(pcKey) + 1);
     if (psNewNode->pcKey == NULL) {
         free(psNewNode);
@@ -109,10 +114,12 @@ int SymTable_put(SymTable_T oSymTable,
     return 1;
 }
 
-/* replace old value (pvOldValue) of key pcKey in oSymTable 
-    with new value pvValue and returns pvOldValue. 
-    if the given pcKey doesn't exist within oSymTable, 
-    returns NULL */
+/* 
+ * replace old value (pvOldValue) of key pcKey in oSymTable 
+ * with new value pvValue and returns pvOldValue.
+ * if the given pcKey doesn't exist within oSymTable, 
+ * returns NULL 
+ */
 void *SymTable_replace(SymTable_T oSymTable,
     const char *pcKey, const void *pvValue) {
     
@@ -121,9 +128,11 @@ void *SymTable_replace(SymTable_T oSymTable,
     assert(oSymTable != NULL);
     assert(pcKey != NULL); 
 
+    /* traverse list to find node that matches pcKey, 
+       replace value with pvValue, return old value */
     for (psCurrentNode = oSymTable -> psFirst; 
-    psCurrentNode != NULL; psCurrentNode = psCurrentNode->psNext) {
-
+    psCurrentNode != NULL; 
+    psCurrentNode = psCurrentNode->psNext) {
         if (strcmp(psCurrentNode -> pcKey, pcKey) == 0) {
             pvOldValue = psCurrentNode->pvValue;
             psCurrentNode->pvValue = (void *)pvValue; 
@@ -133,8 +142,10 @@ void *SymTable_replace(SymTable_T oSymTable,
     return NULL; 
 }
 
-/* checks if given key pcKey exists within oSymTable. 
-    returns 1 if pcKey exists, if else returns 0 */
+/* 
+ * checks if given key pcKey exists within oSymTable. 
+ * returns 1 if pcKey exists, if else returns 0 
+ */
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     struct SymTableNode *psCurrentNode;
     assert(oSymTable != NULL);
@@ -149,13 +160,16 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     return 0; 
 }
 
-/* returns value associated with key pcKey if it exists 
-    within oSymTable, returns NULL if can't find given pcKey
-    in oSymTable */
+/* 
+ * returns value associated with key pcKey if it exists 
+ * within oSymTable, returns NULL if can't find given pcKey
+ * in oSymTable 
+ */
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     struct SymTableNode *psCurrentNode;
     assert(oSymTable != NULL); 
     assert(pcKey != NULL); 
+    /* traverse list to find node that matches pcKey, return value */
     for (psCurrentNode = oSymTable->psFirst;
         psCurrentNode != NULL; 
         psCurrentNode = psCurrentNode->psNext) {
@@ -166,10 +180,12 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     return NULL; 
 }
 
-/* removes binding associated with given pcKey from the
-   symbol table (oSymTable) and frees memory.
-   return value associated with removed key if key existed
-   in oSymTable. return NULL otherwise. */
+/* 
+ * removes binding associated with given pcKey from the
+ * symbol table (oSymTable) and frees memory.
+ * return value associated with removed key if key existed
+ * in oSymTable. return NULL otherwise. 
+ */
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     struct SymTableNode *psCurrentNode;
     struct SymTableNode *psPreviousNode = NULL;
@@ -178,26 +194,29 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
 
+    /* traverse and remove node from list */
     for (psCurrentNode = oSymTable->psFirst; 
         psCurrentNode != NULL; 
         psCurrentNode = psCurrentNode->psNext) {
-            /* traverse and remove node from list */
+            /* check if current node key matches pcKey */
             if (strcmp(psCurrentNode->pcKey, pcKey) == 0) {
                 pvValue = psCurrentNode->pvValue; 
+                /* update head pointer if node to be removed is first node */
                 if (psPreviousNode == NULL) {
                     oSymTable->psFirst = psCurrentNode->psNext;
-            } else {
+                } 
+                /* link previous to next so that current is ignored */
+                else {
                 psPreviousNode->psNext = psCurrentNode->psNext;
-            }
-            free(psCurrentNode->pcKey); 
-            free(psCurrentNode); 
-            oSymTable->uNumBindings--; 
-            return pvValue;
-
-            }
-            psPreviousNode = psCurrentNode; 
+                }
+                free(psCurrentNode->pcKey); 
+                free(psCurrentNode); 
+                oSymTable->uNumBindings--; 
+                return pvValue;
         }
-        return NULL; 
+        psPreviousNode = psCurrentNode; 
+    }
+    return NULL; 
 }
 
 /* to each binding in oSymTable, apply function (pfApply) given by
@@ -210,11 +229,11 @@ void SymTable_map(SymTable_T oSymTable,
     assert(oSymTable != NULL);
     assert(pfApply != NULL);
 
+    /* traverse linked list, apply function to each key-value */
     for (psCurrentNode = oSymTable->psFirst; 
-        psCurrentNode != NULL; 
-        psCurrentNode = psCurrentNode->psNext) {
-            (*pfApply)(psCurrentNode->pcKey, psCurrentNode->pvValue,
+    psCurrentNode != NULL; 
+    psCurrentNode = psCurrentNode->psNext) {
+        (*pfApply)(psCurrentNode->pcKey, psCurrentNode->pvValue,
             (void *)pvExtra); 
-        }
-
     }
+}
