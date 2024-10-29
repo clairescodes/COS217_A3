@@ -79,8 +79,6 @@ int SymTable_put(SymTable_T oSymTable,
 
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
-    assert(pvValue != NULL);
-
 
     /* check if there exists a duplicate key */
     for (psCurrentNode = oSymTable->psFirst; psCurrentNode != NULL;
