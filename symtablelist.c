@@ -5,15 +5,20 @@
 
 /* binding that stores pcKey, pvValue, and psNext */
 struct SymTableNode {
-    char *pcKey;                   /* key string */
-    void *pvValue;                 /* value for key */
-    struct SymTableNode *psNext;   /* pointer to next node */
+    /* key string */
+    char *pcKey;
+    /* value for key */
+    void *pvValue;
+    /* pointer to next node */
+    struct SymTableNode *psNext;
 };
 
 /* symbol table that consists of binding nodes */
 struct SymTable {
-    struct SymTableNode *psFirst; /* pointer to first node */
-    size_t numBindings; /* stores symbol table's number of bindings */
+    /* pointer to first node */
+    struct SymTableNode *psFirst;
+    /* stores symbol table's number of bindings */
+    size_t numBindings; 
 }; 
 
 /* creates a empty SymTable, allocates memory for it, 
@@ -185,7 +190,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
 }
 
 /* to each binding in oSymTable, apply function (pfApply) given by
-   the caller. */
+   the user. */
 void SymTable_map(SymTable_T oSymTable,
                     void (*pfApply)(const char *pcKey, void *pvValue, 
                     void *pvExtra), const void *pvExtra) {
