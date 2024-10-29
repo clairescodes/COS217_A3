@@ -3,20 +3,21 @@
 
 #include <stddef.h>
 
+/* */
 typedef struct SymTable *SymTable_T;
 
 /* creates a empty SymTable, allocates memory for it, 
    and returns it */
 SymTable_T SymTable_new(void);
 
-/* frees memory needed for the SymTable */
+/* frees memory needed for symbol table oSymTable */
 void SymTable_free(SymTable_T oSymTable);
 
 /* returns number of bindings in oSymTable */
 size_t SymTable_getLength(SymTable_T oSymTable);
 
-/* adds new binding to symbol table (oSymTable) if the key pcKey 
-   doesn't exist in oSymTable. 
+/* adds new binding of pcKey, pvValue to symbol table (oSymTable) 
+   if the key pcKey doesn't exist in oSymTable. 
    returns 1 if binding was added, returns 0 if memory allocation 
    fails or key already exists in oSymTable */
 int SymTable_put(SymTable_T oSymTable,
