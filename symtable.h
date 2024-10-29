@@ -2,7 +2,7 @@
    pairs.
    the key is a string and value is a void pointer
    that can store any datatype. 
-   
+   functionalities include: 
    - create & delete symbol table 
    - add & remove key-value pairs
    - retrieve key-value pairs

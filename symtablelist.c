@@ -1,3 +1,12 @@
+/* symbol table module implementation using 
+    linked lists. functionalities include: 
+    - create & delete symbol table 
+    - add & remove key-value pairs
+    - retrieve key-value pairs
+    - replace key-value pairs
+    - check if key exists in symbol table 
+    - apply user defined function to each entry  
+    */
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
