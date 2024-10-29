@@ -29,7 +29,7 @@ struct SymTable {
     /* pointer to first node */
     struct SymTableNode *psFirst;
     /* stores symbol table's number of bindings */
-    size_t numBindings; 
+    size_t uNumBindings; 
 }; 
 
 /* creates a empty SymTable, allocates memory for it, 
@@ -42,7 +42,7 @@ SymTable_T SymTable_new(void) {
         return NULL;
 
     oSymTable->psFirst = NULL;
-    oSymTable->numBindings = 0;
+    oSymTable->uNumBindings = 0;
     return oSymTable;
 }
 
@@ -67,7 +67,7 @@ void SymTable_free(SymTable_T oSymTable) {
 /* returns number of bindings in the symbol table (oSymTable) */
 size_t SymTable_getLength(SymTable_T oSymTable) {
     assert(oSymTable != NULL);
-    return oSymTable->numBindings;
+    return oSymTable->uNumBindings;
 }
 
 /* adds new binding of pcKey, pvValue to symbol table (oSymTable) 
@@ -105,7 +105,7 @@ int SymTable_put(SymTable_T oSymTable,
     psNewNode->pvValue = (void *)pvValue;
     psNewNode->psNext = oSymTable->psFirst;
     oSymTable->psFirst = psNewNode;
-    oSymTable->numBindings++;
+    oSymTable->uNumBindings++;
     return 1;
 }
 
@@ -191,7 +191,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
             }
             free(psCurrentNode->pcKey); 
             free(psCurrentNode); 
-            oSymTable->numBindings--; 
+            oSymTable->uNumBindings--; 
             return pvValue;
 
             }
