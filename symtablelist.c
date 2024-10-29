@@ -59,8 +59,8 @@ size_t SymTable_getLength(SymTable_T oSymTable) {
     return oSymTable->numBindings;
 }
 
-/* adds new binding to symbol table (oSymTable) if the key pcKey 
-   doesn't exist in oSymTable. 
+/* adds new binding of pcKey, pvValue to symbol table (oSymTable) 
+   if the key pcKey doesn't exist in oSymTable. 
    returns 1 if binding was added, returns 0 if memory allocation 
    fails or key already exists in oSymTable */
 int SymTable_put(SymTable_T oSymTable, 
@@ -70,6 +70,8 @@ int SymTable_put(SymTable_T oSymTable,
 
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
+    assert(pvValue != NULL);
+
 
     /* check if there exists a duplicate key */
     for (psCurrentNode = oSymTable->psFirst; psCurrentNode != NULL;
@@ -109,6 +111,7 @@ void *SymTable_replace(SymTable_T oSymTable,
     void *pvOldValue; 
     assert(oSymTable != NULL);
     assert(pcKey != NULL); 
+    assert(pvValue != NULL); 
 
     for (psCurrentNode = oSymTable -> psFirst; 
     psCurrentNode != NULL; psCurrentNode = psCurrentNode->psNext) {
@@ -197,6 +200,7 @@ void SymTable_map(SymTable_T oSymTable,
     struct SymTableNode *psCurrentNode; 
     assert(oSymTable != NULL);
     assert(pfApply != NULL);
+    assert(pvExtra != NULL);
     for (psCurrentNode = oSymTable->psFirst; 
         psCurrentNode != NULL; 
         psCurrentNode = psCurrentNode->psNext) {
