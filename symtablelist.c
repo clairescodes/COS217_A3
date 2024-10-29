@@ -193,7 +193,8 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
 }
 
 /* to each binding in oSymTable, apply function (pfApply) given by
-   the user. */
+   the user. user is able to input additional parameter pvExtra
+   if needed for the user defined function. */
 void SymTable_map(SymTable_T oSymTable,
                     void (*pfApply)(const char *pcKey, void *pvValue, 
                     void *pvExtra), const void *pvExtra) {

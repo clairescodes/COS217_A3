@@ -1,9 +1,21 @@
+/* symbol table implementation that holds key-value 
+   pairs.
+   the key is a string and value is a void pointer
+   that can store any datatype. 
+   
+   - create & delete symbol table 
+   - add & remove key-value pairs
+   - retrieve key-value pairs
+   - replace key-value pairs
+   - check if key exists in symbol table 
+   - apply user defined function to each entry 
+   */
 #ifndef SYMTABLE_INCLUDED
 #define SYMTABLE_INCLUDED
 
 #include <stddef.h>
 
-/* */
+/* abstract data type representing a symbol table */
 typedef struct SymTable *SymTable_T;
 
 /* creates a empty SymTable, allocates memory for it, 
@@ -46,7 +58,8 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey);
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey);
 
 /* to each binding in oSymTable, apply function (pfApply) given by
-   the user. */
+   the user. user is able to input additional parameter pvExtra
+   if needed for the user defined function. */
 void SymTable_map(SymTable_T oSymTable,
     void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
     const void *pvExtra);
