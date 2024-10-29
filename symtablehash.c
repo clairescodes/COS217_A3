@@ -1,31 +1,55 @@
+/* 
+ * symtablehash.c
+ *
+ * Symbol table module implementation 
+ * via hash table & separate chaining. 
+ * functionalities include:
+ * - creating and deleting a symbol table 
+ * - adding and removing key-value pairs
+ * - retrieving, replacing, checking existence of keys
+ * - applying a user-defined function to each entry 
+ */
+
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 #include "symtable.h"
 #define INITIAL_BUCKET_COUNT 509
 #define RESIZE_FACTOR 0.5
-/* stores bucket sizes that are available */
+
+/* array of available bucket sizes, used for hash table resizing */
 static const size_t availBucketSize[] = {509, 1021, 2039, 4093, 
     8191, 16381, 32749, 65521};
 /* number of elements */
 static size_t numBucketSizes = sizeof(availBucketSize) 
     / sizeof(availBucketSize[0]);
 
-/* key value pair node */
+/* key value pair node structure */
 struct SymTableNode {
+    /* key string */
     char *pcKey;
+    /* value for key */
     void *pvValue;
-    struct SymTableNode *psNext;  /* next node in the bucket */
+    /* pointer to next node in the bucket */
+    struct SymTableNode *psNext;  
 };
 
 /* symbol table structure */
 struct SymTable {
+    /* array of bucket pointers */
     struct SymTableNode **buckets;
+    /* number of buckets */
     size_t numBuckets;
+    /* number of bindings */
     size_t numBindings;
 };
 
-static size_t SymTable_hash(const char *pcKey, size_t numBuckets) {
+/*
+ * Compute hash code for given key string pcKey
+ * using the number of buckets provided as uNumBuckets.
+ * Return size_t hash index. 
+ */
+static size_t SymTable_hash(const char *pcKey, size_t uNumBuckets) {
     const size_t HASH_MULTIPLIER = 65599;
     size_t u;
     size_t uHash = 0;
@@ -35,9 +59,15 @@ static size_t SymTable_hash(const char *pcKey, size_t numBuckets) {
     for (u = 0; pcKey[u] != '\0'; u++)
         uHash = uHash * HASH_MULTIPLIER + (size_t)pcKey[u];
 
-    return uHash % numBuckets;
+    return uHash % uNumBuckets;
 }
 
+/* 
+ * Helper function that resizes symbol table oSymTable by 
+ * increasing number of buckets. Then all bindings that already
+ * exist are rehashed into new buckets. Returns 1 if resizing is
+ * successful, and 0 otherwise. 
+ */
 static int SymTable_resize(SymTable_T oSymTable) {
     size_t newBucketSize; 
     size_t oldBucketSize = oSymTable->numBuckets; 
@@ -77,6 +107,11 @@ static int SymTable_resize(SymTable_T oSymTable) {
 
 }
 
+/*
+ * Creates and returns a empty SymTable_T symbol table, 
+ * and allocate memory for the symbol table structure & buckets.
+ * Returns NULL if memory allocation is unsuccessful.
+ */
 SymTable_T SymTable_new(void) {
     SymTable_T oSymTable;
     size_t i; 
@@ -101,6 +136,11 @@ SymTable_T SymTable_new(void) {
     return oSymTable;   
 }
 
+/*
+ * Free all memory associated with symbol table oSymTable.
+ * Thus key-value bindings as well as the symbol table itself 
+ * are freed. If oSymTable is NULL, nothing is freed. 
+ */
 void SymTable_free(SymTable_T oSymTable) {
     struct SymTableNode *psCurrentNode; 
     struct SymTableNode *psNextNode; 
@@ -122,11 +162,18 @@ void SymTable_free(SymTable_T oSymTable) {
     free(oSymTable); 
 }
 
+/* Returns number of bindings in oSymTable. */
 size_t SymTable_getLength(SymTable_T oSymTable) {
     assert(oSymTable != NULL);
     return oSymTable->numBindings;
 }
 
+/* 
+ * Adds new binding of pcKey, pvValue to symbol table (oSymTable) 
+ * if the key pcKey doesn't exist in oSymTable. 
+ * returns 1 if binding was added, returns 0 if memory allocation 
+ * fails or key already exists in oSymTable 
+ */
 int SymTable_put(SymTable_T oSymTable,
     const char *pcKey, const void *pvValue) {
         struct SymTableNode *psNewNode; 
@@ -174,6 +221,12 @@ int SymTable_put(SymTable_T oSymTable,
         return 1;
 }
 
+/* 
+ * replace old value (pvOldValue) of key pcKey in oSymTable
+ * with new value pvValue and returns pvOldValue. 
+ * if the given pcKey doesn't exist within oSymTable, 
+ * returns NULL 
+ */
 void *SymTable_replace(SymTable_T oSymTable,
     const char *pcKey, const void *pvValue) {
         struct SymTableNode *psCurrentNode; 
@@ -199,6 +252,11 @@ void *SymTable_replace(SymTable_T oSymTable,
         return NULL; 
     }
 
+
+/* 
+ * Checks if given key pcKey exists within oSymTable. 
+ * Returns 1 if pcKey exists, if else returns 0 
+ */
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     struct SymTableNode *psCurrentNode; 
     size_t hashIndex; 
@@ -217,6 +275,11 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     return 0; 
 }
 
+/* 
+ * Returns value associated with key pcKey if it exists 
+ * within oSymTable, returns NULL if can't find given pcKey
+ * in oSymTable 
+ */
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     struct SymTableNode *psCurrentNode;
     size_t hashIndex; 
@@ -236,6 +299,12 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     return NULL; 
 }
 
+/* 
+ * Removes binding associated with given pcKey from the
+ * symbol table (oSymTable) and frees memory.
+ * Return the value associated with removed key if key existed
+ * in oSymTable. return NULL otherwise. 
+ */
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     struct SymTableNode *psCurrentNode;
     struct SymTableNode *psPreviousNode = NULL;
@@ -269,6 +338,11 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     return NULL; 
 }
 
+/* 
+ * To each binding in oSymTable, apply function (pfApply) given by
+ * the user. user is able to input additional parameter pvExtra
+ * if needed for the user defined function. 
+ */
 void SymTable_map(SymTable_T oSymTable,
     void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
     const void *pvExtra) {
