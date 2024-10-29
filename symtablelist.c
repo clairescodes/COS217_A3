@@ -208,7 +208,7 @@ void SymTable_map(SymTable_T oSymTable,
     struct SymTableNode *psCurrentNode; 
     assert(oSymTable != NULL);
     assert(pfApply != NULL);
-    assert(pvExtra != NULL);
+    
     for (psCurrentNode = oSymTable->psFirst; 
         psCurrentNode != NULL; 
         psCurrentNode = psCurrentNode->psNext) {
