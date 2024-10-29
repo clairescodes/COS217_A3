@@ -46,7 +46,7 @@ static size_t SymTable_hash(const char *pcKey, size_t uNumBuckets) {
     size_t u;
     size_t uHash = 0;
 
-    assert(pcKey != NULL);
+    assert(pcKey != NULL); 
 
     for (u = 0; pcKey[u] != '\0'; u++)
         uHash = uHash * HASH_MULTIPLIER + (size_t)pcKey[u];
