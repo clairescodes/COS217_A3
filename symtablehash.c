@@ -42,6 +42,7 @@ static int SymTable_resize(SymTable_T oSymTable) {
     size_t newBucketSize; 
     size_t oldBucketSize = oSymTable->numBuckets; 
     size_t i; 
+    struct SymTableNode **newBuckets; 
 
     size_t currentIndex = 0;
     while (currentIndex < numBucketSizes 
@@ -52,8 +53,7 @@ static int SymTable_resize(SymTable_T oSymTable) {
     if (currentIndex >= numBucketSizes) return 1; 
 
     newBucketSize = availBucketSize[currentIndex];
-    struct SymTableNode **newBuckets 
-        = calloc(newBucketSize, sizeof(struct SymTableNode *));
+    newBuckets = calloc(newBucketSize, sizeof(struct SymTableNode *));
     if (!newBuckets) return 0;
 
     for (i = 0; i < oldBucketSize; i++) {

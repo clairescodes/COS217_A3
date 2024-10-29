@@ -46,7 +46,7 @@ void SymTable_free(SymTable_T oSymTable) {
     }
 
     free(oSymTable);
-}; 
+}
 
 /* returns number of bindings in the symbol table (oSymTable) */
 size_t SymTable_getLength(SymTable_T oSymTable) {
