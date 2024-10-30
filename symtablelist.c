@@ -201,7 +201,8 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
             /* check if current node key matches pcKey */
             if (strcmp(psCurrentNode->pcKey, pcKey) == 0) {
                 pvValue = psCurrentNode->pvValue; 
-                /* update head pointer if node to be removed is first node */
+                /* update head pointer if node to be 
+                   removed is first node */
                 if (psPreviousNode == NULL) {
                     oSymTable->psFirst = psCurrentNode->psNext;
                 } 
