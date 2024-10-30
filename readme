@@ -1,11 +1,11 @@
 Assignment 3 readme File
 
-------------------------------------------------------------------------
+----------------------------------------------------------------------
 What is your name?
 
 Claire Shin
 
-------------------------------------------------------------------------
+----------------------------------------------------------------------
 What authorized sources of information did you use to complete the
 assignment? COPY THE LIST of authorized sources of information given
 in the "Policies" web page (also available on armlab in the file
@@ -18,7 +18,7 @@ The course's website.
 The man pages on the armlab cluster.
 LAB TA 
 
-------------------------------------------------------------------------
+----------------------------------------------------------------------
 What unauthorized sources of information did you use to complete the
 assignment? List any unauthorized sources of information that you used
 to complete the assignment, and describe how you used them. The course
@@ -32,7 +32,7 @@ unauthorized sources of information.
 
 None
 
-------------------------------------------------------------------------
+----------------------------------------------------------------------
 In fulfillment of the requirement from section 2.4.3 of the Academic
 Regulations in Princeton's Rights, Rules, Responsibilities guide,
 enter your name in the space below the following affirmation:
@@ -42,20 +42,20 @@ regulations.
 
 Claire Shin
 
-------------------------------------------------------------------------
+----------------------------------------------------------------------
 What is your assessment of the assignment? Was it helpful? Was it fun?
 
 It took a lot of time, but it was nice to brush up on 226
 material again! 
 
-------------------------------------------------------------------------
+----------------------------------------------------------------------
 (optional) What information can you provide about your submission that
 will help your grader to grade it in the most favorable light? In
 particular, what bugs are in your submission?
 
 
 
-------------------------------------------------------------------------
+----------------------------------------------------------------------
 What warnings does splint generate on symtablelist.c, and what are your
 disagreements with them? Copy the splint warnings here, and express your
 disagreement after each warning. If there are no warnings, then write
@@ -64,30 +64,23 @@ disagreement after each warning. If there are no warnings, then write
 Splint 3.1.2 --- 20 Aug 2022
 
 testsymtable.c: (in function testLargeTable)
-testsymtable.c:823:7: Buffer overflow possible with sprintf.  
-Recommend using
-                         snprintf instead: sprintf
+testsymtable.c:823:7: Buffer overflow possible with sprintf.
+Recommend using snprintf instead: sprintf
   Use of function that may lead to buffer overflow. 
   (Use -bufferoverflowhigh to
   inhibit warning)
-testsymtable.c:840:7: Buffer overflow possible with sprintf.  
-Recommend using
-                         snprintf instead: sprintf
-testsymtable.c:846:7: Buffer overflow possible with sprintf.  
-Recommend using
-                         snprintf instead: sprintf
+testsymtable.c:840:7: Buffer overflow possible with sprintf.
+Recommend using snprintf instead: sprintf
+testsymtable.c:846:7: Buffer overflow possible with sprintf.
+Recommend using snprintf instead: sprintf
 testsymtable.c:855:7: Buffer overflow possible with sprintf.  
-Recommend using
-                         snprintf instead: sprintf
-testsymtable.c:867:7: Buffer overflow possible with sprintf. 
-Recommend using
-                         snprintf instead: sprintf
-testsymtable.c:877:7: Buffer overflow possible with sprintf.  
-Recommend using
-                         snprintf instead: sprintf
-testsymtable.c:890:7: Buffer overflow possible with sprintf.  
-Recommend using
-                         snprintf instead: sprintf
+Recommend using snprintf instead: sprintf
+testsymtable.c:867:7: Buffer overflow possible with sprintf.  
+Recommend using snprintf instead: sprintf
+testsymtable.c:877:7: Buffer overflow possible with sprintf.
+Recommend using snprintf instead: sprintf
+testsymtable.c:890:7: Buffer overflow possible with sprintf.
+Recommend using snprintf instead: sprintf
 
 Finished checking --- 7 code warnings
 
@@ -99,15 +92,15 @@ disagreements with them? Copy the critTer warnings here, and express
 your disagreement after each warning. If there are no warnings, then
 write "None."
 
-symtablelist.c: line 76: medium priority:
+symtablelist.c: line 82: medium priority:
 Do you want to validate 'pvValue' through an assert?
    -> it is posisble for pvValue to be NULL. 
 
-symtablelist.c: line 115: medium priority:
+symtablelist.c: line 124: medium priority:
 Do you want to validate 'pvValue' through an assert?
    -> it is posisble for pvValue to be NULL. 
 
-symtablelist.c: line 206: medium priority:
+symtablelist.c: line 227: medium priority:
 Do you want to validate 'pvExtra' through an assert?
    -> it is posisble for pvValue to be NULL when additional 
    parameter in the user defined function is not needed
