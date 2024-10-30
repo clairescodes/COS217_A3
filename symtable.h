@@ -1,23 +1,27 @@
 /* 
- * symtable.h 
- * symbol table implementation that holds key-value 
- * pairs.
- * the key is a string and value is a void pointer
- * that can store any datatype. 
- * functionalities include: 
- *  - create & delete symbol table 
- *  - add & remove key-value pairs
- *  - retrieve key-value pairs
- *  - replace key-value pairs
- *  - check if key exists in symbol table 
- * - apply user defined function to each entry 
+ * symtable.h
+ * 
+ * Interface for symbol table that holds key-value pairs.
+ * Keys are strings; values are void pointers that can point
+ * to any data type.
+ * 
+ * Functionalities:
+ * - Create & delete symbol table
+ * - Add & remove key-value pairs
+ * - Retrieve, replace, check for keys
+ * - Apply a user-defined function to every entry
  */
+
 #ifndef SYMTABLE_INCLUDED
 #define SYMTABLE_INCLUDED
 
 #include <stddef.h>
 
-/* abstract data type representing a symbol table */
+/* 
+ * SymTable_T is an abstract data type representing a 
+ * symbol table. It stores key-value pairs where 
+ * keys are strings and values are pointers to 
+ * arbitrary data types */
 typedef struct SymTable *SymTable_T;
 
 /* 
