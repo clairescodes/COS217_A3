@@ -16,7 +16,7 @@ The course's lectures.
 The course's precepts.
 The course's website.
 The man pages on the armlab cluster.
-LAB TA 
+LAB TA - 
 
 ----------------------------------------------------------------------
 What unauthorized sources of information did you use to complete the
@@ -148,15 +148,15 @@ disagreements with them? Copy the critTer warnings here, and express
 your disagreement after each warning. If there are no warnings, then
 write "None."
 
-symtablehash.c: line 178: medium priority:
+symtablehash.c: line 192: medium priority:
 Do you want to validate 'pvValue' through an assert?
 -> it is posisble for pvValue to be NULL. 
 
-symtablehash.c: line 231: medium priority:
+symtablehash.c: line 247: medium priority:
 Do you want to validate 'pvValue' through an assert?
 -> it is posisble for pvValue to be NULL. 
 
-symtablehash.c: line 348: medium priority:
+symtablehash.c: line 374: medium priority:
 Do you want to validate 'pvExtra' through an assert?
 -> it is posisble for pvValue to be NULL when additional 
    parameter in the user defined function is not needed
