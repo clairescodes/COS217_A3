@@ -197,7 +197,8 @@ int SymTable_put(SymTable_T oSymTable,
         assert(oSymTable != NULL); 
         assert(pcKey != NULL); 
 
-        /* determine whether resizing is needed */
+        /* determine if resizing is needed. 
+           comment out the if statement to disable resizing */
         if ((double)oSymTable->uNumBindings / oSymTable->uNumBuckets 
                                                     > RESIZE_FACTOR) {
             /* case when resizing fails */
