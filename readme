@@ -152,11 +152,11 @@ symtablehash.c: line 192: medium priority:
 Do you want to validate 'pvValue' through an assert?
 -> it is posisble for pvValue to be NULL. 
 
-symtablehash.c: line 247: medium priority:
+symtablehash.c: line 248: medium priority:
 Do you want to validate 'pvValue' through an assert?
 -> it is posisble for pvValue to be NULL. 
 
-symtablehash.c: line 374: medium priority:
+symtablehash.c: line 375: medium priority:
 Do you want to validate 'pvExtra' through an assert?
 -> it is posisble for pvValue to be NULL when additional 
    parameter in the user defined function is not needed
